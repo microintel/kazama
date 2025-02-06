@@ -1,4 +1,4 @@
-{
+let pData={
   "name": "dani-daniels",
   "phone": "123456",
   "age": 35,
@@ -9,4 +9,4 @@
   "work": "actress,-model",
   "song": "https://youtu.be/yP9KiFTyBks?si=tbilMjFJEq6sBz4E",
   "bank-account-number": "3727282828"
-}
+};
