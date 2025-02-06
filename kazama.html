@@ -114,26 +114,11 @@ xo.currentTime=0;
 xo.play();
 }
 const msgs = [
-    "I am not an AI; I can't understand.",
-    "I don't know what you mean.",
+    "I am not an AI ; I can't understand.",
     "I cannot think or answer.",
-    "I do not understand this.",
-    "I can't read this well.",
-    "I have no ideas about this.",
-    "I cannot help with this.",
-    "I don't know what to say.",
     "I am not able to answer.",
-    "I do not get this.",
     "I am not an AI; I can't think.",
-    "I do not understand this question.",
-    "I cannot give an answer.",
-    "I don’t know what this means.",
-    "I am not able to help.",
-    "I do not have any ideas.",
-    "I can't explain this.",
-    "I do not know the answer.",
-    "I am not smart enough for this.",
-    "I cannot understand words well."
+    "I am not smart enough for this."
 ];
 
 function rndMsg() {
@@ -153,17 +138,24 @@ function rndMsg() {
       "gmail id":"dani@gmail.com",
       "work":"actress, model",
       "song":"https://youtu.be/yP9KiFTyBks?si=tbilMjFJEq6sBz4E",
-      "Bank AC Number":"3727282828"
+      "bank account number":"3727282828"
       };
+    
+    const lowKeys = o => 
+    Object.fromEntries(Object.entries(o).map(([k, v]) => [k.toLowerCase(), v]));
+    lowKeys(pData);
+    
     
     let words = [...new Set(Object.keys(pData).flatMap(k => k.split(" ")))];
 
     function chk(input) {
+       input=input.toLowerCase();
         let iWords = input.split(" ");
-        return iWords.every(w => words.includes(w)) ? getAns(input) : "I don't understand.";
+        return iWords.every(w => words.includes(w)) ? getAns(input) : rndMsg();
     }
 
     function getAns(input) {
+  //  input=input.toLowerCase();
         return pData[Object.keys(pData).find(k => k.split(" ").sort().join(" ") === input.split(" ").sort().join(" "))] || "I don't understand.";
     }
 
@@ -172,14 +164,13 @@ function rndMsg() {
 
     function send() {
     closeP();
+    
         tysv.style.display="none";
         let txt = document.getElementById("inp").value.trim();
         if (!txt) return;
-        
         addMsg(txt, "u-msg");
-
-       
-       setTimeout(() => addMsg(chk(txt), "b-msg"), 1500);
+         maTH(txt) ? setTimeout(() => addMsg(eval(txt), "b-msg"), 1500) : setTimeout(() => addMsg(chk(txt), "b-msg"), 1500);
+        
         
         document.getElementById("inp").value = "";
     }
@@ -235,6 +226,32 @@ function rndMsg() {
     
     sugBox.style.display = sugBox.children.length ? "block" : "none";
     }
+    
+    
+    
+    function maTH(input) {
+    let haNum = false;
+    let haOpp = false;
+    
+    for (let i = 0; i < input.length; i++) {
+    let char = input[i];
+    
+    if (char >= '0' && char <= '9') {
+    haNum = true;
+    } else if (char === '+' || char === '-' || char === '*' || char === '/' || char === '(' || char === ')' || char === '^' || char === '%') {
+    haOpp = true;
+    } else if (char !== ' ') {
+    return false;
+    }
+    }
+    
+    return haNum && haOpp;
+    }
+    
+    
+    
+    
+    
 </script>
 
 </body>
