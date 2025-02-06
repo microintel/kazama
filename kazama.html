@@ -4,66 +4,10 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>kazama</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"> </script>
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" type="image/x-icon" href="icon512_maskable.png">
-    <style>
-        * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
-        body { background:black; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; }
-        .chat { width: 100%; height: 100vh; display: flex; flex-direction: column; background:black; }
-        .head { display: flex; align-items: center; justify-content: space-between; padding: 15px; background:black; border-bottom: 1px solid grey; }
-        .logo { height: 40px; }
-        .p-icon,i { font-size:1.5rem; border-radius: 50%; cursor: pointer; text-align:center;}
-        .box { flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; scrollbar-width: thin; scrollbar-color: black black; }
-        .msg { padding: 7px 11px; border-radius: 7px; margin: 5px 0; max-width: 75%; word-wrap: break-word; font-size: 15px; }
-        .u-msg { background:black; color: white; align-self: flex-end;border:1px solid grey; }
-        .b-msg { background:black; color: white; align-self: flex-start;border:1px solid grey; }
-        .inp-box { display: flex; padding: 10px; background:black;  border-top: 2px solid grey;}
-        input { flex: 1; padding: 10px; border:none; background:black; color: white; border-radius: 5px; outline: none; font-size: 16px; }
-        button { margin-left: 10px; padding: 8px; border:1px solid grey; background:black; color: white; border-radius: 5px; cursor: pointer; font-size: 16px; }
-        button:hover { background:grey; }
-        .p-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background:black; padding: 20px; border-radius: 10px; border:1px solid grey; display: none; flex-direction: column; width: 300px; box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2); }
-        .p-modal h2 { text-align: center; margin-bottom: 10px; }
-        .p-modal p { font-size: 16px; margin: 8px 0; }
-        .close { background:grey; padding: 8px; border: none; color:black; cursor: pointer; margin-top: 10px; border-radius: 5px; }
-        .close:hover { background: darkred; }
-        p{
-        text-align:center;
-        padding:3px;
-        font-size:0.75rem;
-        margin:3px;
-        color:#F0EAD6;
-        }
-        
-        .proi{
-        display:grid;
-        grid-template-columns:1fr 1fr 1fr;
-        margin:20px 5px 5px 5px;
-        justify-content:center;
-        padding:5px;
-        row-gap:15px;
-        }
-        .proi i{
-        padding:3px;
-        font-size:2rem;
-        }
-        
-        .type{
-        position:absolute;
-        top:50%;
-        top:50%;
-        z-index:10;
-        width:100%;
-        }
-        #inp::placeholder{
-        color:white;
-        }
-        
-        .sug-box { position: absolute; bottom: 50px; left: 0; width: 100%; background: black; border: 1px solid grey; max-height: 150px; overflow-y: auto; display: none; z-index: 10; border-radius:10px;}
-        .sug-item { padding: 8px; cursor: pointer; color: white; }
-        .sug-item:hover { background: grey; }
-        
-        
-    </style>
+    <link rel="stylesheet" href="kazama.css">
 </head>
 <body>
 <audio id="smA" src="sendmu.mp3"></audio>
@@ -82,6 +26,7 @@
     
     
     <div class="inp-box">
+    <i onclick="webC(this)"  class="fa-solid fa-earth b"></i>
         <input name="brow" list="brow" oninput="showSug()" id="inp" type="text" placeholder="Ask...">
         <i style="margin-top:5px;" class="fas fa-paper-plane" onclick="send()"></i>
         <div id="sug-box" class="sug-box"></div>
@@ -91,168 +36,36 @@
 
 <div class="p-modal" id="p-modal">
     <h2>Profile</h2>
-    <input style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="Enter Name...">
-    <input style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="Enter KeyPass...">
-    <input style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="Enter ValPass...">
+    
     <div class="proi">
-    <i class="fa-solid fa-save" style="font-size:2.5rem;color:orange;" onclick="openP()"></i>
-    <i class="fa-solid fa-trash" style="font-size:2.5rem;color:red;"onclick="openP()"></i>
-    <i class="fa-solid fa-close" style="font-size:2.5rem;color:red;" onclick="closeP()"></i>
-    
+    <i class="fa-solid fa-file-import" style="color:orange;" onclick="ranDU('hi')"></i>
+    <i class="fa-solid fa-save" style="color:red;"onclick="openP()"></i>
+    <i class="fa-solid fa-trash" style="color:red;" onclick="closeP()"></i>
+    <i class="fa-solid fa-close" style="color:red;" onclick="closeP()"></i>
     </div>
+    
+    <input style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="Enter Name...">
+    <input style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="Enter M Pass...">
+    <input style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="Enter Wi Pass...">
+    <input style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="Enter C Pass..." id="impKey" value="kaz">
 </div>
+<script type="text/javascript" src="https://microintel.github.io/kazama/kazamaData.js"></script>
+<script src="kazamashin.js">  </script>
+<script type="text/javascript">
 
+function webC(b){
 
-
-<script>
-let tysv=document.getElementById("typesv");
-let psm=document.getElementById("smA");
-let prm=document.getElementById("rmA");
-
-function plMa(xo){
-xo.currentTime=0;
-xo.play();
+if(b.className=="fa-solid fa-earth w"){
+b.style.color="white";
+b.className="fa-solid fa-earth b";
+}else{
+b.style.color="lightgreen";
+b.className="fa-solid fa-earth w";
 }
-const msgs = [
-    "I am not an AI ; I can't understand.",
-    "I cannot think or answer.",
-    "I am not able to answer.",
-    "I am not an AI; I can't think.",
-    "I am not smart enough for this."
-];
 
-function rndMsg() {
-    return msgs[Math.floor(Math.random() * msgs.length)];
 }
 
 
-    let box = document.getElementById("box");
-    
-    let pData = {
-     "name": "dani daniels", 
-     "phone": "123456",
-      "age": 35,
-      "gmail password":"nknchakli@123",
-      "home address":"london ksrtc bustand",
-      "aadhar address":"s/o dani daniels ,cpu street android badavane",
-      "gmail id":"dani@gmail.com",
-      "work":"actress, model",
-      "song":"https://youtu.be/yP9KiFTyBks?si=tbilMjFJEq6sBz4E",
-      "bank account number":"3727282828"
-      };
-    
-    const lowKeys = o => 
-    Object.fromEntries(Object.entries(o).map(([k, v]) => [k.toLowerCase(), v]));
-    lowKeys(pData);
-    
-    
-    let words = [...new Set(Object.keys(pData).flatMap(k => k.split(" ")))];
-
-    function chk(input) {
-       input=input.toLowerCase();
-        let iWords = input.split(" ");
-        return iWords.every(w => words.includes(w)) ? getAns(input) : rndMsg();
-    }
-
-    function getAns(input) {
-  //  input=input.toLowerCase();
-        return pData[Object.keys(pData).find(k => k.split(" ").sort().join(" ") === input.split(" ").sort().join(" "))] || "I don't understand.";
-    }
-
-    
-    
-
-    function send() {
-    closeP();
-    
-        tysv.style.display="none";
-        let txt = document.getElementById("inp").value.trim();
-        if (!txt) return;
-        addMsg(txt, "u-msg");
-         maTH(txt) ? setTimeout(() => addMsg(eval(txt), "b-msg"), 1500) : setTimeout(() => addMsg(chk(txt), "b-msg"), 1500);
-        
-        
-        document.getElementById("inp").value = "";
-    }
-
-    function addMsg(txt, cls) {
-        let div = document.createElement("div");
-        div.className = `msg ${cls}`;
-        div.innerText = txt;
-        div.ondblclick=function (){
-        cpyto(this.innerText);
-        }
-        box.appendChild(div);
-        if(cls=="b-msg"){
-        plMa(psm);
-        }else{
-        prm.currentTime=1;
-        plMa(prm);
-        }
-        box.scrollTop = box.scrollHeight;
-    }
-
-    function openP() { document.getElementById("p-modal").style.display = "flex";tysv.style.display="none";}
-    function closeP() { document.getElementById("p-modal").style.display = "none"; tysv.style.display="block";}
-    
-    
-    function cpyto(phd){
-    navigator.clipboard.writeText(phd);
-    alert("Copied...");
-    }
-    
-    function showSug() {
-    let val = document.getElementById("inp").value.toLowerCase();
-    let sugBox = document.getElementById("sug-box");
-    sugBox.innerHTML = "";
-    
-    if (!val) { 
-    sugBox.style.display = "none"; 
-    return; 
-    }
-    
-    Object.keys(pData).forEach(key => {
-    if (key.toLowerCase().includes(val)) {
-    let div = document.createElement("div");
-    div.className = "sug-item";
-    div.innerText = key;
-    div.onclick = () => { 
-    document.getElementById("inp").value = key; 
-    sugBox.style.display = "none"; 
-    };
-    sugBox.appendChild(div);
-    }
-    });
-    
-    sugBox.style.display = sugBox.children.length ? "block" : "none";
-    }
-    
-    
-    
-    function maTH(input) {
-    let haNum = false;
-    let haOpp = false;
-    
-    for (let i = 0; i < input.length; i++) {
-    let char = input[i];
-    
-    if (char >= '0' && char <= '9') {
-    haNum = true;
-    } else if (char === '+' || char === '-' || char === '*' || char === '/' || char === '(' || char === ')' || char === '^' || char === '%') {
-    haOpp = true;
-    } else if (char !== ' ') {
-    return false;
-    }
-    }
-    
-    return haNum && haOpp;
-    }
-    
-    
-    
-    
-    
 </script>
-
 </body>
 </html>
