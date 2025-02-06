@@ -58,6 +58,11 @@
         color:white;
         }
         
+        .sug-box { position: absolute; bottom: 50px; left: 0; width: 100%; background: black; border: 1px solid grey; max-height: 150px; overflow-y: auto; display: none; z-index: 10; border-radius:10px;}
+        .sug-item { padding: 8px; cursor: pointer; color: white; }
+        .sug-item:hover { background: grey; }
+        
+        
     </style>
 </head>
 <body>
@@ -77,8 +82,9 @@
     
     
     <div class="inp-box">
-        <input name="brow" list="brow" id="inp" type="text" placeholder="Ask...">
+        <input name="brow" list="brow" oninput="showSug()" id="inp" type="text" placeholder="Ask...">
         <i style="margin-top:5px;" class="fas fa-paper-plane" onclick="send()"></i>
+        <div id="sug-box" class="sug-box"></div>
     </div>
   
 </div>
@@ -97,15 +103,7 @@
 </div>
 
 
-<datalist id="brow">
-    <option value="name"> name</option>
-    <option value="home address"> home address</option>
-    <option value="aadhar address">aadhar address</option>
-    <option value="gmail password"> gmail password</option>
-    <option value="work"> work</option>
-    <option value="song"> song</option>
-    <option value="Bank AC Number"> Bank AC Number</option>
-  </datalist>
+
 <script>
 let tysv=document.getElementById("typesv");
 let psm=document.getElementById("smA");
@@ -210,6 +208,32 @@ function rndMsg() {
     function cpyto(phd){
     navigator.clipboard.writeText(phd);
     alert("Copied...");
+    }
+    
+    function showSug() {
+    let val = document.getElementById("inp").value.toLowerCase();
+    let sugBox = document.getElementById("sug-box");
+    sugBox.innerHTML = "";
+    
+    if (!val) { 
+    sugBox.style.display = "none"; 
+    return; 
+    }
+    
+    Object.keys(pData).forEach(key => {
+    if (key.toLowerCase().includes(val)) {
+    let div = document.createElement("div");
+    div.className = "sug-item";
+    div.innerText = key;
+    div.onclick = () => { 
+    document.getElementById("inp").value = key; 
+    sugBox.style.display = "none"; 
+    };
+    sugBox.appendChild(div);
+    }
+    });
+    
+    sugBox.style.display = sugBox.children.length ? "block" : "none";
     }
 </script>
 
