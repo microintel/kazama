@@ -1,0 +1,67 @@
+
+<html>
+<head>
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>JSON Editor</title>
+</head>
+<body>
+    <h2>Upload JSON</h2>
+    <input type="file" id="file" accept=".json"><br><br>
+
+    <h2>Modify</h2>
+    <input type="text" id="key" placeholder="Key">
+    <input type="text" id="val" placeholder="Value">
+    <button onclick="upd()">Update</button><br><br>
+
+    <h2>Contents</h2>
+    <pre id="out">No file loaded.</pre>
+
+    <button onclick="dwn()">Download</button>
+
+    <script>
+        let data = {};
+
+        document.getElementById('file').addEventListener('change', function(e) {
+            const f = e.target.files[0];
+            if (!f) return;
+
+            const r = new FileReader();
+            r.onload = function(e) {
+                try {
+                    data = JSON.parse(e.target.result);
+                    if (typeof data !== 'object' || Array.isArray(data)) {
+                        alert('Invalid JSON!');
+                        data = {};
+                        document.getElementById('out').textContent = "Invalid format!";
+                    } else {
+                        document.getElementById('out').textContent = JSON.stringify(data, null, 2);
+                    }
+                } catch {
+                    alert('Error loading JSON!');
+                    data = {};
+                    document.getElementById('out').textContent = "Error!";
+                }
+            };
+            r.readAsText(f);
+        });
+
+        function upd() {
+            const k = document.getElementById('key').value.trim().toLowerCase().replace(/ /g,"-");
+            const v = document.getElementById('val').value.trim().toLowerCase().replace(/ /g,"-");
+            if (!k) return alert('Key required!');
+            data[k] = v;
+            document.getElementById('out').textContent = JSON.stringify(data, null, 2);
+        }
+
+        function dwn() {
+            const b = new Blob([JSON.stringify(data, null, 2)], { type: 'application/json' });
+            const a = document.createElement('a');
+            a.href = URL.createObjectURL(b);
+            a.download = 'updated.json';
+            document.body.appendChild(a);
+            a.click();
+            document.body.removeChild(a);
+        }
+    </script>
+</body>
+</html>

@@ -71,23 +71,37 @@ function rndMsg() {
     }
 
     function addMsg(txt, cls) {
-        let div = document.createElement("div");
-        div.className = `msg ${cls}`;
-        div.innerHTML = txt;
-        div.ondblclick=function (){
-        cpyto(this.innerText);
-        }
-        div.onclick=function (){
-        this.innerText=conED(this.innerText,"d");
-        }
-        box.appendChild(div);
-        if(cls=="b-msg"){
-        plMa(psm);
-        }else{
-        prm.currentTime=1;
-        plMa(prm);
-        }
-        box.scrollTop = box.scrollHeight;
+    let div = document.createElement("div");
+    div.className = `msg ${cls}`;
+    box.appendChild(div);
+    
+    if(cls=="b-msg"){
+    div.innerText="";
+    typeE(div, txt);
+    }
+    else{
+    div.innerText=txt;
+    psm.currentTime=0;
+    plMa(prm);
+    }
+    
+    div.ondblclick = function () {
+    cpyto(this.innerText);
+    };
+    
+   // div.onclick = function () {
+   // this.innerText = conED(this.innerText, "d");
+  //  };
+    
+    
+    box.scrollTop = box.scrollHeight;
+    }
+    
+    function typeE(ele, te, ind = 0) {
+    if (ind < te.length) {
+    ele.innerHTML += te.charAt(ind);
+    setTimeout(() => typeE(ele, te, ind + 1), 20);
+    }
     }
 
     function openP() { document.getElementById("p-modal").style.display = "flex";tysv.style.display="none";}
@@ -165,13 +179,15 @@ function rndMsg() {
     
     let c=await f.json();
     
-   let yu= await c["RelatedTopics"][0]["Result"];
+   let yu= await c["RelatedTopics"][0]["Text"];
     return yu;
     
     
     }
     
     
+    
+   
     
  
     
