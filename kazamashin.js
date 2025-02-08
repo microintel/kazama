@@ -73,17 +73,19 @@ function rndMsg() {
     function addMsg(txt, cls) {
     let div = document.createElement("div");
     div.className = `msg ${cls}`;
-  div.id= "#"+cls.replace(/ /g,"-");
+ // div.id= "#"+cls.replace(/ /g,"-");
     
-   location.href=div.id;
+   //location.href=div.id;
     if(cls=="b-msg"){
     
     div.innerText="";
+    resetIfMore(box);
     box.append(div);
     
     typeE(div, txt);
     }
     else{
+    resetIfMore(box);
    box.append(div);
     div.innerText=txt;
     psm.currentTime=0;
@@ -100,7 +102,7 @@ function rndMsg() {
   //  };
     
    let cvg= box.scrollHeight;
-    box.scrollTop = cvg-300;
+    box.scrollTop = cvg;
     }
     
     
@@ -197,6 +199,13 @@ function rndMsg() {
     
     }
     }
+    
+    
+    function resetIfMore(p) {
+    if (p.children.length > 3) while (p.firstChild) p.removeChild(p.firstChild);
+    }
+    
+   
     
     
     
