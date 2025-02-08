@@ -60,7 +60,7 @@ function rndMsg() {
         ,1500);
         }
         else if(maTH(txt)){
-        setTimeout(() => addMsg(eval(txt), "b-msg"), 1500);
+        setTimeout(() => addMsg(eval(txt).toString(), "b-msg"), 1500);
         } else if(typeof(pData)=="object"){
         setTimeout(() => addMsg(chk(txt), "b-msg"), 1500);
         }else{
@@ -73,16 +73,22 @@ function rndMsg() {
     function addMsg(txt, cls) {
     let div = document.createElement("div");
     div.className = `msg ${cls}`;
-    box.appendChild(div);
+  div.id= "#"+cls.replace(/ /g,"-");
     
+   location.href=div.id;
     if(cls=="b-msg"){
+    
     div.innerText="";
+    box.append(div);
+    
     typeE(div, txt);
     }
     else{
+   box.append(div);
     div.innerText=txt;
     psm.currentTime=0;
     plMa(prm);
+ 
     }
     
     div.ondblclick = function () {
@@ -93,9 +99,11 @@ function rndMsg() {
    // this.innerText = conED(this.innerText, "d");
   //  };
     
-    
-    box.scrollTop = box.scrollHeight;
+   let cvg= box.scrollHeight;
+    box.scrollTop = cvg-300;
     }
+    
+    
     
     function typeE(ele, te, ind = 0) {
     if (ind < te.length) {
@@ -158,6 +166,7 @@ function rndMsg() {
     }
     
     return haNum && haOpp;
+   
     }
     
     function conED(txt,type){
@@ -173,16 +182,20 @@ function rndMsg() {
     
     
    async function ranDU(tx){
-   
+   try{
     let qu=`https://api.duckduckgo.com/?q=${tx}&format=json`;
    let f= await fetch(qu);
     
     let c=await f.json();
     
    let yu= await c["RelatedTopics"][0]["Text"];
-    return yu;
+   
+   return yu;
+   
+   }catch(e){
+    return "Search Not Found";
     
-    
+    }
     }
     
     
