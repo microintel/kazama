@@ -1,0 +1,156 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Kazama</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 10px;
+        }
+
+        h3 {
+            color: #fff;
+            font-size: 18px;
+        }
+
+        input, button {
+            display: block;
+            width: 90%;
+            margin: 8px auto;
+            padding: 12px;
+            border: 1px solid #808080;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input {
+            background: #000;
+            color: #fff;
+        }
+
+        input::placeholder {
+            color: #fff;
+        }
+
+        button {
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:active {
+            background: #111;
+        }
+
+        pre {
+            background: #000;
+            padding: 10px;
+            border: 1px solid #808080;
+            border-radius: 5px;
+            text-align: left;
+            width: 90%;
+            margin: 8px auto;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+    </style>
+</head>
+<body>
+
+    <h3>Kazama <br> Black Pigeon</h3>
+    
+    <input id="n" placeholder="Enter Name">
+    <input id="v1" placeholder="Create Password For Sky">
+    <input id="v2" placeholder="Create Password For Breeze">
+
+    <button onclick="upd()">Upd</button>
+    <button onclick="down()">Down</button>
+
+    <input onchange="upload()" type="file" id="fileInput">
+
+    <pre id="out">{}</pre>
+
+    <script>
+        let d = {};
+        let bre = document.getElementById("v2").value.trim();
+        function upd() {
+            let k = document.getElementById("n").value.trim();
+            let v1 = document.getElementById("v1").value.trim();
+            let v2 = document.getElementById("v2").value.trim();
+            if (k && (v1 && v2)) {
+                d["name"] = k;
+                d["sky"] = v1;
+                d["breez"] = v2;
+                document.getElementById("out").textContent = JSON.stringify(d, null, 2);
+            }
+            else{
+            alert("please enter all feild");
+            }
+        }
+
+        function down() {
+            if (!d.breez) return;
+            
+            // Alert messages before downloading
+            const messages = [
+                "Please remember your Breez password! ",
+                "Keep your Breez password safe!",
+                "Without your Breez password, you can't decrypt the file!",
+                "Write your Breez password down somewhere secure!",
+                "Your Breez password is important. Don't forget it!"
+            ];
+
+            messages.forEach((x)=>{
+            alert(x+"\n\n"+"breeze Passwd : "+d.breez);
+            });
+
+            let enc = CryptoJS.AES.encrypt(JSON.stringify(d), d.breez).toString();
+            let blob = new Blob([enc], { type: "application/json" });
+            let a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "data.json";
+            a.click();
+        }
+
+        function upload() {
+            let fileInput = document.getElementById("fileInput");
+            let file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please select a file first!");
+                return;
+            }
+
+            let reader = new FileReader();
+            reader.onload = function(event) {
+                let encryptedData = event.target.result;
+                let password = prompt("Enter the Breez password to decrypt:");
+
+                if (!password) {
+                    alert("Decryption canceled.");
+                    return;
+                }
+
+                try {
+                    let decrypted = CryptoJS.AES.decrypt(encryptedData, password).toString(CryptoJS.enc.Utf8);
+                    let parsedData = JSON.parse(decrypted);
+                    document.getElementById("out").textContent = JSON.stringify(parsedData, null, 2);
+                    d = parsedData;
+                    alert("Data Viewed...");
+                } catch (e) {
+                    alert("Decryption failed! Incorrect password or corrupted file.");
+                }
+            };
+
+            reader.readAsText(file);
+        }
+    </script>
+
+</body>
+</html>

@@ -43,12 +43,47 @@
     <i class="fa-solid fa-close" style="color:red;" onclick="closeP()"></i>
     </div>
     
-    <input style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="Enter Name...">
-    <input style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="Enter M Pass...">
-    <input style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="Enter Wi Pass...">
-    <input style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="Enter C Pass..." id="impKey" value="kaz">
+        <input id="cnn" style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="name" value="dani daniels">
+        
+        <input id="encData" style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="url" value="https://microintel.github.io/kazama/dani.json">
+        <input id="skyPass" style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="Enter Sky Pass..." value="hi">
+        
+    <input id="breePass" style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="Enter Breeze Pass..." value="nkn">
 </div>
-<script type="text/javascript" src="https://microintel.github.io/kazama/kazamaData.js"></script>
+<script>
+let mahi= {
+cnam:document.getElementById("cnn").value,
+encUDat:document.getElementById("encData").value,
+sky:document.getElementById("skyPass").value,
+brez:document.getElementById("breePass").value
+};
+
+let pData=0;
+async function fetD(){
+try{
+
+let fx= await fetch(mahi.encUDat.toString());
+let conX= await fx.text();
+let deX= await JSON.parse(CryptoJS.AES.decrypt(conX,mahi.brez).toString(CryptoJS.enc.Utf8));
+
+Object.keys(deX).forEach((x)=>{
+
+deX[x]=CryptoJS.AES.decrypt(deX[x],mahi.sky).toString(CryptoJS.enc.Utf8);
+
+});
+
+pData=deX;
+//alert(pData["name"]);
+
+}
+catch(e){
+alert("please import files & urls...");
+}
+}
+
+fetD();
+
+</script>
 <script src="kazamashin.js">  </script>
 <script type="text/javascript">
 

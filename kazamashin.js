@@ -1,7 +1,6 @@
 let tysv=document.getElementById("typesv");
 let psm=document.getElementById("smA");
 let prm=document.getElementById("rmA");
-let imKey=document.getElementById("impKey").value;
 let webE=document.getElementsByClassName("fa-solid fa-earth");
 function plMa(xo){
 xo.currentTime=0;
@@ -35,7 +34,7 @@ function rndMsg() {
     function chk(input) {
        input=input.toLowerCase();
         let iWords = input.split("-");
-        return iWords.every(w => words.includes(w)) ? getAns(input) : rndMsg();
+        return iWords.every(w => words.includes(w)) ? getAns(input) : getAns(input);
     }
 
     function getAns(input) {
@@ -54,7 +53,7 @@ function rndMsg() {
         let txt = document.getElementById("inp").value.trim();
         if (!txt) return;
         addMsg(txt, "u-msg");
-        if(webE[0].className=="fa-solid fa-earth w"){
+        if(webE[0].className=="fa-solid fa-earth w" && !maTH(txt)){
         setTimeout( ()=>{
         ranDU(txt).then(da=>addMsg(da,"b-msg"))}
         ,1500);
@@ -79,30 +78,33 @@ function rndMsg() {
     if(cls=="b-msg"){
     
     div.innerText="";
-    resetIfMore(box);
-    box.append(div);
-    
-    typeE(div, txt);
+  //  resetIfMore(box);
+    div.innerHTML=txt;
+    div.ondblclick=()=>cpyto(txt);
+    box.prepend(div);
+    div.innerText="";
+  typeE(div, txt);
+   
     }
     else{
-    resetIfMore(box);
-   box.append(div);
+   // resetIfMore(box);
+   box.prepend(div);
     div.innerText=txt;
     psm.currentTime=0;
     plMa(prm);
  
     }
     
-    div.ondblclick = function () {
-    cpyto(this.innerText);
-    };
+    
     
    // div.onclick = function () {
    // this.innerText = conED(this.innerText, "d");
   //  };
     
    let cvg= box.scrollHeight;
-    box.scrollTop = cvg;
+    
+    div.scrollTop = cvg;
+    
     }
     
     
@@ -115,7 +117,7 @@ function rndMsg() {
     }
 
     function openP() { document.getElementById("p-modal").style.display = "flex";tysv.style.display="none";}
-    function closeP() { document.getElementById("p-modal").style.display = "none"; tysv.style.display="block";}
+    function closeP() { document.getElementById("p-modal").style.display = "none"; tysv.style.display="none";if(document.getElementById("box").children.length>0){tysv.style.display="none" }else{tysv.style.display="block"}}
     
     
     function cpyto(phd){
@@ -192,17 +194,23 @@ function rndMsg() {
     
    let yu= await c["RelatedTopics"][0]["Text"];
    
+   
+   if(yu=="" ||yu==" "){
+   return "Search Nit Found";
+   }else{
    return yu;
+   }
    
    }catch(e){
     return "Search Not Found";
+  // return e.mesaage;
     
     }
     }
     
     
     function resetIfMore(p) {
-    if (p.children.length > 3) while (p.firstChild) p.removeChild(p.firstChild);
+    if (p.children.length > 23) while (p.firstChild) p.removeChild(p.firstChild);
     }
     
    

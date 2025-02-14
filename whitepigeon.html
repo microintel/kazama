@@ -1,0 +1,148 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no">
+    <title>Kazama</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"></script>
+    <style>
+        body {
+            background: #000;
+            color: #fff;
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 10px;
+        }
+
+        h3 {
+            color: #fff;
+            font-size: 18px;
+        }
+
+        input, button {
+            display: block;
+            width: 90%;
+            margin: 8px auto;
+            padding: 12px;
+            border: 1px solid #808080;
+            border-radius: 5px;
+            font-size: 14px;
+        }
+
+        input {
+            background: #000;
+            color: #fff;
+        }
+
+        input::placeholder {
+            color: #fff;
+        }
+
+        button {
+            background: #000;
+            color: #fff;
+            cursor: pointer;
+        }
+
+        button:active {
+            background: #111;
+        }
+
+        pre {
+        
+            background: #000;
+            padding: 10px;
+            border: 1px solid #808080;
+            border-radius: 5px;
+            text-align: left;
+            width: 48%;
+            margin: 8px auto;
+            font-size: 12px;
+            overflow-x: auto;
+        }
+        .pr{
+        display:flex;
+        width:100%;
+        gap:10px;
+        
+        }
+    </style>
+</head>
+<body>
+
+    <h3>Kazama <br> White pigeon </h3>
+    
+    <input id="name" placeholder="Data Refreence">
+    <input id="v0" placeholder="Data">
+    <button onclick="upd()">Upd</button>
+    <button onclick="down()">Down</button>
+
+    <input onchange="upload()" type="file" id="fileInput">
+    <div class="pr">
+    <pre id="out">{}</pre>
+<pre id="out2">{}</pre>
+</div>
+
+    <script>
+        let d = {};
+        let ed={};
+        function upd() {
+            let k = document.getElementById("name").value.trim().toLowerCase().replace(/ /g,"-");
+            let v0 = document.getElementById("v0").value.trim().toLowerCase().replace(/ /g,"-");
+            if (k && v0) {
+                d[k] = v0;
+                ed[k]= CryptoJS.AES.encrypt(v0,"hi").toString();
+                document.getElementById("out").textContent = JSON.stringify(d, null, 2);
+                document.getElementById("out2").textContent = JSON.stringify(ed, null, 2);
+            }
+            
+            document.getElementById("name").value="";
+            document.getElementById("v0").value="";
+            
+        }
+
+        function down() {
+            // Alert messages before downloading
+            
+            let enc = CryptoJS.AES.encrypt(JSON.stringify(ed),"nkn").toString();
+            let blob = new Blob([enc], { type: "application/json" });
+            let a = document.createElement("a");
+            a.href = URL.createObjectURL(blob);
+            a.download = "data.json";
+            a.click();
+        }
+
+        function upload() {
+        
+            let fileInput = document.getElementById("fileInput");
+            let file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please select a file first!");
+                return;
+            }
+            let reader = new FileReader();
+            reader.onload = function(event) {
+                let encryptedData = event.target.result;
+                let password = "nkn";
+                    let decrypted = CryptoJS.AES.decrypt(encryptedData, password).toString(CryptoJS.enc.Utf8);
+                    let parsedData = JSON.parse(decrypted.trim().replace(/ /g,""));
+                    document.getElementById("out2").textContent = JSON.stringify(parsedData, null, 2);
+                    d={...parsedData};
+                    let xx;
+                    Object.keys(d).forEach((y)=>{
+                     d[y]=CryptoJS.AES.decrypt(d[y],"hi").toString(CryptoJS.enc.Utf8);
+                    
+                    });
+                    document.getElementById("out").textContent = JSON.stringify(d, null, 2);
+                    ed={...parsedData};
+                    
+                
+            };
+
+            reader.readAsText(file);
+        }
+    </script>
+
+</body>
+</html>
