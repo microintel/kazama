@@ -3,6 +3,73 @@
     <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>kazama</title>
+    <style type="text/css">
+    
+    * { margin: 0; padding: 0; box-sizing: border-box; font-family: Arial, sans-serif; }
+    body { background:black; color: white; display: flex; justify-content: center; align-items: center; height: 100vh; }
+    .chat { width: 100%; height: 100vh; display: flex; flex-direction: column; background:black; }
+    .head { display: flex; align-items: center; justify-content: space-between; padding: 15px; background:black; border-bottom: 1px solid grey; }
+    .logo { height: 40px; }
+    .p-icon,i { font-size:1.5rem; border-radius: 50%; cursor: pointer; text-align:center;}
+    .box {padding-bottom:20px; flex: 1; overflow-y: auto; padding: 15px; display: flex; flex-direction: column; scrollbar-width: thin; scrollbar-color: black black;}
+    .msg { padding: 7px 11px; border-radius: 7px; margin: 5px 0; max-width: 75%; word-wrap: break-word; font-size: 15px; }
+    .u-msg { background:black; color: white; align-self: flex-end;border:1px solid transparent; }
+    .b-msg { background:black; color: white; align-self: flex-start;border:1px solid transparent; }
+    .inp-box {margin:0px;width:100%; border-radius:25px;display: flex; padding: 10px; background:black;  border-top: 1px solid grey;width:100%;}
+    input { flex: 1; padding: 10px; border:none; background:transparent; color: white; border-radius: 5px; outline: none; font-size: 16px; }
+    button { margin-left: 10px; padding: 8px; border:1px solid grey; background:black; color: white; border-radius: 5px; cursor: pointer; font-size: 16px; }
+    button:hover { background:grey; }
+    .p-modal { position: fixed; top: 50%; left: 50%; transform: translate(-50%, -50%); background:black; padding: 20px; border-radius: 10px; border:1px solid grey; display: none; flex-direction: column; width: 300px; box-shadow: 0px 0px 10px rgba(255, 255, 255, 0.2); }
+    .p-modal h2 { text-align: center; margin-bottom: 10px; }
+    .p-modal p { font-size: 16px; margin: 8px 0; }
+    .close { background:grey; padding: 8px; border: none; color:black; cursor: pointer; margin-top: 10px; border-radius: 5px; }
+    .close:hover { background: darkred; }
+    p{
+    text-align:center;
+    padding:3px;
+    font-size:0.75rem;
+    margin:3px;
+    color:#F0EAD6;
+    text-wrap:wrap;
+    }
+    
+    .proi{
+    display:grid;
+    grid-template-columns:1fr 1fr 1fr 1fr;
+    margin:5px 5px 5px 5px;
+    justify-content:center;
+    padding:5px;
+    row-gap:15px;
+    }
+    .proi i{
+    padding:3px;
+    font-size:1.5rem;
+    }
+    
+    .type{
+    position:absolute;
+    top:50%;
+    top:50%;
+    z-index:10;
+    width:100%;
+    }
+    #inp::placeholder{
+    color:white;
+    }
+    
+    .sug-box { position: absolute; bottom: 50px; left: 0; width: 100%; background: black; border: 1px solid grey; max-height: 150px; overflow-y: auto; display: none; z-index: 10; border-radius:10px;}
+    .sug-item { padding: 8px; cursor: pointer; color: white; }
+    .sug-item:hover { background: grey; }
+    
+    .inp-box i{
+    text-align:center;
+    position:relative;
+    top:20%;
+    
+    }
+    
+    
+    </style>
     <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"> </script>
     <link rel="manifest" href="manifest.json" />
     <link rel="icon" type="image/x-icon" href="icon512_maskable.png">
@@ -42,7 +109,7 @@
     <i class="fa-solid fa-trash" style="color:red;" onclick="closeP()"></i>
     <i class="fa-solid fa-close" style="color:red;" onclick="closeP()"></i>
     </div>
-    <input onchange="upload()" type="file">
+    <input onchange="upload()" id="fil" type="file">
         <input id="cnn" style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="name" value="dani daniels">
         
         <input id="encData" style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="url" value="">
@@ -54,7 +121,8 @@
 <script>
 
 function upload() {
-            let fileInput = document.getElementById("fileInput");
+
+            let fileInput = document.getElementById("fil");
             let file = fileInput.files[0];
 
             if (!file) {
@@ -75,8 +143,9 @@ function upload() {
                 try {
                     let decrypted = CryptoJS.AES.decrypt(encryptedData, password).toString(CryptoJS.enc.Utf8);
                     let parsedData = JSON.parse(decrypted);
-                    document.getElementById("out").textContent = JSON.stringify(parsedData, null, 2);
+                    //document.getElementById("out").textContent = JSON.stringify(parsedData, null, 2);
                     pData = parsedData;
+                    alert(pData);
                     alert("Data Viewed...");
                 } catch (e) {
                     alert("Decryption failed! Incorrect password or corrupted file.");
@@ -97,7 +166,7 @@ brez:document.getElementById("breePass").value
 let pData=0;
 async function fetD(){
 try{
-mahi.encUDat=document.getElementById("cnn").value;
+mahi.encUDat=document.getElementById("encData").value;
 let fx= await fetch(mahi.encUDat.toString());
 let conX= await fx.text();
 let deX= await JSON.parse(CryptoJS.AES.decrypt(conX,mahi.brez).toString(CryptoJS.enc.Utf8));
@@ -120,7 +189,10 @@ alert("please import files & urls...");
 fetD();
 
 </script>
-<script src="kazamashin.js">  </script>
+<script src="kazamashin.js"> 
+ 
+ 
+ </script>
 <script type="text/javascript">
 
 function webC(b){
@@ -135,6 +207,236 @@ b.className="fa-solid fa-earth w";
 
 }
 
+
+</script>
+
+
+<script type="text/javascript">
+
+
+let tysv=document.getElementById("typesv");
+let psm=document.getElementById("smA");
+let prm=document.getElementById("rmA");
+let webE=document.getElementsByClassName("fa-solid fa-earth");
+function plMa(xo){
+xo.currentTime=0;
+xo.play();
+}
+const msgs = [
+    "I am not an AI ; I can't understand.",
+    "I cannot think or answer.",
+    "I am not able to answer.",
+    "I am not an AI; I can't think.",
+    "I am not smart enough for this."
+];
+
+function rndMsg() {
+    return msgs[Math.floor(Math.random() * msgs.length)];
+}
+
+
+    let box = document.getElementById("box");
+    
+    
+    pData.toString().replace(/ /g,"");
+  
+    const lowKeys = o => 
+    Object.fromEntries(Object.entries(o).map(([k, v]) => [k.toLowerCase(), v]));
+    lowKeys(pData);
+    
+    
+    let words = [...new Set(Object.keys(pData).flatMap(k => k.split("-")))];
+
+    function chk(input) {
+       input=input.toLowerCase();
+        let iWords = input.split("-");
+        return iWords.every(w => words.includes(w)) ? getAns(input) : getAns(input);
+    }
+
+    function getAns(input) {
+  //  input=input.toLowerCase();
+  return pData[Object.keys(pData).find(k => k.split("-").sort().join("-") === input.split("-").sort().join("-"))] || "I don't understand.";
+        
+    }
+
+    
+    
+
+    function send() {
+    closeP();
+    
+        tysv.style.display="none";
+        let txt = document.getElementById("inp").value.trim();
+        if (!txt) return;
+        addMsg(txt, "u-msg");
+        if(webE[0].className=="fa-solid fa-earth w" && !maTH(txt)){
+        setTimeout( ()=>{
+        ranDU(txt).then(da=>addMsg(da,"b-msg"))}
+        ,1500);
+        }
+        else if(maTH(txt)){
+        setTimeout(() => addMsg(eval(txt).toString(), "b-msg"), 1500);
+        } else if(typeof(pData)=="object"){
+        setTimeout(() => addMsg(chk(txt), "b-msg"), 1500);
+        }else{
+        setTimeout(() => addMsg("Please Import Data File To Read", "b-msg"), 1500);
+         
+        }
+        document.getElementById("inp").value = "";
+    }
+
+    function addMsg(txt, cls) {
+    let div = document.createElement("div");
+    div.className = `msg ${cls}`;
+ // div.id= "#"+cls.replace(/ /g,"-");
+    
+   //location.href=div.id;
+    if(cls=="b-msg"){
+    
+    div.innerText="";
+  //  resetIfMore(box);
+    div.innerHTML=txt;
+    div.ondblclick=()=>cpyto(txt);
+    box.prepend(div);
+    div.innerText="";
+  typeE(div, txt);
+   
+    }
+    else{
+   // resetIfMore(box);
+   box.prepend(div);
+    div.innerText=txt;
+    psm.currentTime=0;
+    plMa(prm);
+ 
+    }
+    
+    
+    
+   // div.onclick = function () {
+   // this.innerText = conED(this.innerText, "d");
+  //  };
+    
+   let cvg= box.scrollHeight;
+    
+    div.scrollTop = cvg;
+    
+    }
+    
+    
+    
+    function typeE(ele, te, ind = 0) {
+    if (ind < te.length) {
+    ele.innerHTML += te.charAt(ind);
+    setTimeout(() => typeE(ele, te, ind + 1), 20);
+    }
+    }
+
+    function openP() { document.getElementById("p-modal").style.display = "flex";tysv.style.display="none";}
+    function closeP() { document.getElementById("p-modal").style.display = "none"; tysv.style.display="none";if(document.getElementById("box").children.length>0){tysv.style.display="none" }else{tysv.style.display="block"}}
+    
+    
+    function cpyto(phd){
+    navigator.clipboard.writeText(phd);
+    alert("Copied...");
+    }
+    
+    function showSug() {
+    let val = document.getElementById("inp").value.toLowerCase();
+    let sugBox = document.getElementById("sug-box");
+    sugBox.innerHTML = "";
+    
+    if (!val) { 
+    sugBox.style.display = "none"; 
+    return; 
+    }
+    
+    Object.keys(pData).forEach(key => {
+    if (key.toLowerCase().includes(val)) {
+    let div = document.createElement("div");
+    div.className = "sug-item";
+    div.innerText = key;
+    div.onclick = () => { 
+    document.getElementById("inp").value = key; 
+    sugBox.style.display = "none"; 
+    };
+    sugBox.appendChild(div);
+    }
+    });
+    
+    sugBox.style.display = sugBox.children.length ? "block" : "none";
+    }
+    
+    
+    
+    function maTH(input) {
+    let haNum = false;
+    let haOpp = false;
+    
+    for (let i = 0; i < input.length; i++) {
+    let char = input[i];
+    
+    if (char >= '0' && char <= '9') {
+    haNum = true;
+    } else if (char === '+' || char === '-' || char === '*' || char === '/' || char === '(' || char === ')' || char === '^' || char === '%') {
+    haOpp = true;
+    } else if (char !== ' ') {
+    return false;
+    }
+    }
+    
+    return haNum && haOpp;
+   
+    }
+    
+    function conED(txt,type){
+    
+    if(type=="d"){
+    let dd= CryptoJS.AES.decrypt(txt,imKey);
+    return dd.toString(CryptoJS.enc.Utf8);
+    }else{
+    
+    }
+    
+    }
+    
+    
+   async function ranDU(tx){
+   try{
+    let qu=`https://api.duckduckgo.com/?q=${tx}&format=json`;
+   let f= await fetch(qu);
+    
+    let c=await f.json();
+    
+   let yu= await c["RelatedTopics"][0]["Text"];
+   
+   
+   if(yu=="" ||yu==" "){
+   return "Search Nit Found";
+   }else{
+   return yu;
+   }
+   
+   }catch(e){
+    return "Search Not Found";
+  // return e.mesaage;
+    
+    }
+    }
+    
+    
+    function resetIfMore(p) {
+    if (p.children.length > 23) while (p.firstChild) p.removeChild(p.firstChild);
+    }
+    
+   
+    
+    
+    
+   
+    
+ 
+    
 
 </script>
 </body>
