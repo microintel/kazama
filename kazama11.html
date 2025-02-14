@@ -1,0 +1,141 @@
+<html>
+<head>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.7.2/css/all.min.css" integrity="sha512-Evv84Mr4kqVGRNSgIGL/F/aIDqQb7xQ2vcrdIwxfjThSH8CSR7PBEakCr51Ck+w+/U6swU2Im1vVX0SVk9ABhg==" crossorigin="anonymous" referrerpolicy="no-referrer" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>kazama</title>
+    <script src="https://cdnjs.cloudflare.com/ajax/libs/crypto-js/4.1.1/crypto-js.min.js"> </script>
+    <link rel="manifest" href="manifest.json" />
+    <link rel="icon" type="image/x-icon" href="icon512_maskable.png">
+    <link rel="stylesheet" href="kazama.css">
+</head>
+<body>
+<audio id="smA" src="what.mp3"></audio>
+<audio id="rmA" src="recmu.mp3"></audio>
+<center>
+<img id="typesv" class="type" src="https://readme-typing-svg.demolab.com?font=Roboto&size=25&duration=1500&pause=3000&color=FFFFFF&center=true&vCenter=true&width=440&lines=Your+figure%2C+your+fortress+-+;Kazama+is+client-side;so+even+we+can't+read+your+data;Only+a+weak+password+allows+hacking;Everything+is+in+your+clutches;Kazama+by+Microintel+has+your+back!+;Forgot+password%3F+is+the+most-clicked;button+on+the+internet.;My+password+is+so+secure;+even+I+can%E2%80%99t+remember+it." alt="Typing SVG" />
+</center>
+
+<div class="chat">
+    <div class="head">
+        <img src="kazama.png" alt="Batani Logo" class="logo"> 
+        <i alt="Profile" class="p-icon fa-solid fa-user" onclick="openP()"></i>
+    </div>
+
+    <div class="box" id="box"></div>
+    
+    
+    <div class="inp-box">
+    <i onclick="webC(this)"  class="fa-solid fa-earth b"></i>
+        <input name="brow" list="brow" oninput="showSug()" id="inp" type="text" placeholder="Ask...">
+        <i style="margin-top:5px;" class="fas fa-paper-plane" onclick="send()"></i>
+        <div id="sug-box" class="sug-box"></div>
+    </div>
+  
+</div>
+
+<div class="p-modal" id="p-modal">
+    <h2>Profile</h2>
+    
+    <div class="proi">
+    <i class="fa-solid fa-file-import" style="color:orange;" onclick="ranDU('hi')"></i>
+    <i class="fa-solid fa-save" style="color:red;"onclick="openP()"></i>
+    <i class="fa-solid fa-trash" style="color:red;" onclick="closeP()"></i>
+    <i class="fa-solid fa-close" style="color:red;" onclick="closeP()"></i>
+    </div>
+    <input onchange="upload()" type="file">
+        <input id="cnn" style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="name" value="dani daniels">
+        
+        <input id="encData" style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="url" value="">
+        <input id="skyPass" style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="Enter Sky Pass..." value="hi">
+        
+    <input id="breePass" style="border-bottom:1px solid white;border-radius:10px;color:grey;" placeholder="Enter Breeze Pass..." value="nkn">
+    <button onclick="fetD()">jddjjdnddjjd</button>
+</div>
+<script>
+
+function upload() {
+            let fileInput = document.getElementById("fileInput");
+            let file = fileInput.files[0];
+
+            if (!file) {
+                alert("Please select a file first!");
+                return;
+            }
+
+            let reader = new FileReader();
+            reader.onload = function(event) {
+                let encryptedData = event.target.result;
+                let password = prompt("Enter the Breez password to decrypt:");
+
+                if (!password) {
+                    alert("Decryption canceled.");
+                    return;
+                }
+
+                try {
+                    let decrypted = CryptoJS.AES.decrypt(encryptedData, password).toString(CryptoJS.enc.Utf8);
+                    let parsedData = JSON.parse(decrypted);
+                    document.getElementById("out").textContent = JSON.stringify(parsedData, null, 2);
+                    pData = parsedData;
+                    alert("Data Viewed...");
+                } catch (e) {
+                    alert("Decryption failed! Incorrect password or corrupted file.");
+                }
+            };
+
+            reader.readAsText(file);
+        }
+
+
+let mahi= {
+cnam:document.getElementById("cnn").value,
+encUDat:document.getElementById("encData").value,
+sky:document.getElementById("skyPass").value,
+brez:document.getElementById("breePass").value
+};
+
+let pData=0;
+async function fetD(){
+try{
+mahi.encUDat=document.getElementById("cnn").value;
+let fx= await fetch(mahi.encUDat.toString());
+let conX= await fx.text();
+let deX= await JSON.parse(CryptoJS.AES.decrypt(conX,mahi.brez).toString(CryptoJS.enc.Utf8));
+
+Object.keys(deX).forEach((x)=>{
+
+deX[x]=CryptoJS.AES.decrypt(deX[x],mahi.sky).toString(CryptoJS.enc.Utf8);
+
+});
+
+pData=deX;
+//alert(pData["name"]);
+
+}
+catch(e){
+alert("please import files & urls...");
+}
+}
+
+fetD();
+
+</script>
+<script src="kazamashin.js">  </script>
+<script type="text/javascript">
+
+function webC(b){
+
+if(b.className=="fa-solid fa-earth w"){
+b.style.color="white";
+b.className="fa-solid fa-earth b";
+}else{
+b.style.color="lightgreen";
+b.className="fa-solid fa-earth w";
+}
+
+}
+
+
+</script>
+</body>
+</html>
